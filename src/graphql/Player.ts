@@ -1,50 +1,52 @@
-import { extendType, objectType, nonNull, stringArg } from "nexus";
-import { NexusGenObjects } from "../../nexus-typegen";  
+import { extendType, objectType, nonNull, stringArg, intArg } from "nexus";
+import { NexusGenObjects } from "../../nexus-typegen"; 
 
 export const Player = objectType({
     name: "Player",
     definition(t) {
         t.nonNull.int("id"); 
-        t.nonNull.string("name");
-    },
-});
-
-export const PlayerQuery = extendType({
-    type: "Query",
-    definition(t) {
-        t.nonNull.list.nonNull.field("players", {
-            type: "Player",
-            resolve(parent, args, context, info) {
-                return context.prisma.player.findMany();
-            },
+        t.nonNull.string("firstname"); 
+        t.nonNull.string("lastname"); 
+        t.int("age"); 
+        t.field("team", {
+            type: "Team",
+            resolve(parent, args, context) {
+                return context.prisma.player
+                    .findUnique({where: {id: parent.id}})
+                    .team();
+            }
         });
-    },
-});
-
-export const PlayerMutation = extendType({
-    type: "Mutation",    
-    definition(t) {
-        t.nonNull.field("createPlayer", {
-            type: "Player",  
-            args: {
-                name: nonNull(stringArg()),
-            },
-            
-            resolve(parent, args, context) {    
-
-                // const { userId } = context;
-
-                // if (!userId) {  // 1
-                //     throw new Error("Cannot post without logging in.");
-                // }
-
-                const newPlayer = context.prisma.player.create({
-                    data: {
-                        name: args.name,
-                    },
-                });
-                return newPlayer;
-            },
+        t.field("country", {
+            type: "Location",
+            resolve(parent, args, context) {
+                return context.prisma.player
+                    .findUnique({where: {id: parent.id}})
+                    .country();
+            }
         });
+        t.field("ratings", {
+            type: "Rating",
+            resolve(parent, args, context) {
+                return context.prisma.player
+                    .findUnique({where: {id: parent.id}})
+                    .ratings();
+            }
+        });
+        t.field("matches", {
+            type: "Match",
+            resolve(parent, args, context) {
+                return context.prisma.player
+                    .findUnique({where: {id: parent.id}})
+                    .matches();
+            }
+        });
+        t.field("performances", {
+            type: "Performance",
+            resolve(parent, args, context) {
+                return context.prisma.player
+                    .findUnique({where: {id: parent.id}})
+                    .performances();
+            }
+        })
     },
 });
