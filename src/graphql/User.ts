@@ -5,7 +5,7 @@ export const User = objectType({
     definition(t) {
         t.nonNull.int("id");
         t.nonNull.string("username");
-        t.nonNull.string("displayname");
+        t.string("displayname");
         t.nonNull.string("email");
         t.field("location", {
             type: "Location",

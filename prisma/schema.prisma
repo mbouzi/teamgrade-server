@@ -17,8 +17,9 @@ model User {
   displayname          String?
   email                String      @unique
   password             String
+  profileImg String?
   location             Location?    @relation(fields: [locationId], references: [id], name: "UserLocation")
-  locationId           Int
+  locationId           Int?
   communities          Community[] @relation(name: "Communities")
   ratings              Rating[]    @relation(name: "UserRating")
   moderatedCommunities Community[] @relation(name: "ModeratedCommunities")
@@ -34,10 +35,10 @@ model Player {
   team         Team          @relation(fields: [teamId], references: [id], name: "PlayerTeam")
   teamId       Int
   country      Location?      @relation(fields: [countryId], references: [id], name: "PlayerCountry")
-  countryId    Int
+  countryId    Int?
   ratings      Rating[]      @relation(name: "PlayerRated")
   performances Performance[] @relation(name: "PlayerPerformances")
-  matches        Match[]       @relation(name: "PlayerMatches")
+  matches      Match[]       @relation(name: "PlayerMatches")
 
   @@unique([firstname, lastname, countryId, teamId])
 }
@@ -53,6 +54,8 @@ model Rating {
   match         Match       @relation(fields: [matchId], references: [id], name: "RatingMatch")
   matchId       Int
   score         Int         @default(0)
+  team Team @relation(fields: [teamId], references: [id], name: "TeamRatings")
+  teamId Int
 
   @@unique([performanceId, userId, playerId])
 }
@@ -63,7 +66,7 @@ model Performance {
   player   Player   @relation(fields: [playerId], references: [id], name: "PlayerPerformances")
   playerId Int
   match    Match?    @relation(fields: [matchId], references: [id], name: "PerformanceMatch")
-  matchId  Int
+  matchId  Int?
   ratings  Rating[] @relation(name: "RatingPerformance")
 
   @@unique([playerId, matchId])
@@ -116,6 +119,7 @@ model Team {
   homegames   Match[]     @relation(name: "HomeTeam")
   awaygames   Match[]     @relation(name: "AwayTeam")
   communities Community[] @relation(name: "CommunityTeams")
+    ratings Rating[] @relation(name: "TeamRatings")
 
   @@unique([locationId, name])
 }

@@ -48,7 +48,7 @@ type Mutation {
   createMatch(awayteamId: Int!, competitionId: Int!, date: String!, hometeamId: Int!): Match!
   login(email: String!, password: String!): AuthPayload!
   ratePlayer(matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!): Rating!
-  signup(displayname: String!, email: String!, password: String!, username: String!): AuthPayload!
+  signup(email: String!, password: String!, username: String!): AuthPayload!
 }
 
 type Performance {
@@ -90,6 +90,7 @@ type Rating {
 type Team {
   awaygames: Match
   communities: Community
+  communityAverage: Int
   homegames: Match
   id: Int!
   location: Location
@@ -101,7 +102,7 @@ type Team {
 type User {
   communities: Community
   createdCommunities: Community
-  displayname: String!
+  displayname: String
   email: String!
   id: Int!
   location: Location
