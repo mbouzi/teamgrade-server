@@ -54,7 +54,9 @@ export const RatingMutation = extendType({
                 score: nonNull(intArg()),
                 performanceId: nonNull(intArg()),
                 playerId: nonNull(intArg()),
-                matchId: nonNull(intArg())
+                matchId: nonNull(intArg()),
+                teamId: nonNull(intArg()),
+                communityId: nonNull(intArg()),
             },
             
             async resolve(parent, args, context) {    
@@ -64,7 +66,7 @@ export const RatingMutation = extendType({
                     throw new Error("Cannot rate without logging in.");
                 }
 
-                const { score, performanceId, matchId, playerId } = args;
+                const { score, performanceId, matchId, playerId, teamId, communityId } = args;
 
                 const newRating = await context.prisma.rating.create({
                     data: {
@@ -73,6 +75,8 @@ export const RatingMutation = extendType({
                         player: { connect: { id: playerId } },
                         performance: { connect: { id: performanceId }},
                         match: { connect: { id: matchId}},
+                        team: { connect: { id: matchId}},
+                        community: { connect: { id: matchId}},
                     },
                 });
                 return newRating;

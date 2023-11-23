@@ -33,13 +33,16 @@ type Location {
 }
 
 type Match {
+  average: Int
   awayteam: Team
+  communityAverage(communityId: Int): Int
   competitions: Competition
   hometeam: Team
   id: Int!
   performance: Performance
   ratedBy: User
   ratings: Rating
+  userAverage: Int
 }
 
 type Mutation {
@@ -47,7 +50,7 @@ type Mutation {
   createCommunity(name: String!, teamId: Int!): Community!
   createMatch(awayteamId: Int!, competitionId: Int!, date: String!, hometeamId: Int!): Match!
   login(email: String!, password: String!): AuthPayload!
-  ratePlayer(matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!): Rating!
+  ratePlayer(communityId: Int!, matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!, teamId: Int!): Rating!
   signup(email: String!, password: String!, username: String!): AuthPayload!
 }
 
@@ -61,14 +64,18 @@ type Performance {
 
 type Player {
   age: Int
+  average: Int
+  communityAverage(communityId: Int): Int
   country: Location
   firstname: String!
   id: Int!
+  lastUserRating: Int
   lastname: String!
   matches: Match
   performances: Performance
   ratings: Rating
   team: Team
+  userAverage: Int
 }
 
 type Query {
@@ -88,15 +95,17 @@ type Rating {
 }
 
 type Team {
+  average: Int
   awaygames: Match
   communities: Community
-  communityAverage: Int
+  communityAverage(communityId: Int): Int
   homegames: Match
   id: Int!
   location: Location
   match: Match
   name: String!
   players: Player
+  userAverage: Int
 }
 
 type User {

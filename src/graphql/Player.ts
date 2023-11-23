@@ -48,5 +48,49 @@ export const Player = objectType({
                     .performances();
             }
         })
+
+        t.field("average", {
+            type: "Int",
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                    .aggregate({where: {playerId: parent.id}, _avg: {score: true}});
+            }
+        });
+
+        t.field("userAverage", {
+            type: "Int",
+            resolve(parent, args, context) {
+                const { userId } = context;
+
+                if (!userId) null;
+
+                return context.prisma.rating
+                    .aggregate({where: {playerId: parent.id, userId}, _avg: {score: true}});
+            }
+        });
+
+        t.field("communityAverage", {
+            type: "Int",
+            args: {
+                communityId: intArg()
+            },
+            resolve(parent, args, context) {
+                
+                return context.prisma.rating
+                    .aggregate({where: {playerId: parent.id, communityId: args.communityId}, _avg: {score: true}});
+            }
+        });
+
+        t.field("lastUserRating", {
+            type: "Int",
+            resolve(parent, args, context) {
+                const { userId } = context;
+
+                if (!userId) null;
+
+                return context.prisma.rating
+                    .findFirst({where: {playerId: parent.id, userId}, take: 1, orderBy: {createdAt: 'desc'}});
+            }
+        });
     },
 });
