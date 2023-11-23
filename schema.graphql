@@ -7,24 +7,106 @@ type AuthPayload {
   user: User!
 }
 
-type Mutation {
-  createPlayer(name: String!): Player!
-  login(email: String!, password: String!): AuthPayload!
-  signup(displayname: String!, email: String!, password: String!, username: String!): AuthPayload!
+type Community {
+  id: Int!
+  members: User
+  moderators: User
+  string: String!
+  teams: Team
 }
 
-type Player {
+type Competition {
   id: Int!
+  location: Location
+  matches: Match
   name: String!
 }
 
+type Location {
+  city: Int!
+  competitions: Competition
+  country: String!
+  id: Int!
+  players: Player
+  teams: Team
+  users: User
+}
+
+type Match {
+  awayteam: Team
+  competitions: Competition
+  hometeam: Team
+  id: Int!
+  performance: Performance
+  ratedBy: User
+  ratings: Rating
+}
+
+type Mutation {
+  addNewMember(communityId: Int!, userId: Int!): Community!
+  createCommunity(name: String!, teamId: Int!): Community!
+  createMatch(awayteamId: Int!, competitionId: Int!, date: String!, hometeamId: Int!): Match!
+  login(email: String!, password: String!): AuthPayload!
+  ratePlayer(matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!): Rating!
+  signup(email: String!, password: String!, username: String!): AuthPayload!
+}
+
+type Performance {
+  id: Int!
+  match: Match
+  player: Player
+  ratings: Rating
+  teams: Team
+}
+
+type Player {
+  age: Int
+  country: Location
+  firstname: String!
+  id: Int!
+  lastname: String!
+  matches: Match
+  performances: Performance
+  ratings: Rating
+  team: Team
+}
+
 type Query {
-  players: [Player!]!
+  ok: Boolean!
+}
+
+type Rating {
+  age: Int
+  firstname: String!
+  id: Int!
+  lastname: String!
+  match: Match
+  performance: Performance
+  player: Player
+  score: Int!
+  user: User
+}
+
+type Team {
+  awaygames: Match
+  communities: Community
+  homegames: Match
+  id: Int!
+  location: Location
+  match: Match
+  name: String!
+  players: Player
 }
 
 type User {
-  displayname: String!
+  communities: Community
+  createdCommunities: Community
+  displayname: String
   email: String!
   id: Int!
+  location: Location
+  matchesRated: Match
+  moderatedCommunities: Community
+  ratings: Rating
   username: String!
 }
