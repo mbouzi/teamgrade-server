@@ -28,6 +28,7 @@ export const AuthMutation = extendType({
                 const user = await context.prisma.user.findUnique({
                     where: { email: args.email },
                 });
+                
                 if (!user) {
                     throw new Error("No such user found");
                 }

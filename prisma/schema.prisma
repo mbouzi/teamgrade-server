@@ -10,17 +10,124 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Player {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  name        String
+model User {
+  id                   Int         @id @default(autoincrement())
+  createdAt            DateTime    @default(now())
+  username             String      @unique
+  displayname          String?
+  email                String      @unique
+  password             String
+  location             Location?    @relation(fields: [locationId], references: [id], name: "UserLocation")
+  locationId           Int
+  communities          Community[] @relation(name: "Communities")
+  ratings              Rating[]    @relation(name: "UserRating")
+  moderatedCommunities Community[] @relation(name: "ModeratedCommunities")
+  createdCommunities   Community[] @relation(name: "CreatedCommunities")
+  matchesRated         Match[]     @relation(name: "MatchesRated")
 }
 
-model User {
-    id          Int      @id @default(autoincrement())
-    createdAt   DateTime @default(now())
-    username    String   @unique
-    displayname String
-    email       String   @unique
-    password    String
+model Player {
+  id           Int           @id @default(autoincrement())
+  firstname    String?
+  lastname     String
+  age          Int?
+  team         Team          @relation(fields: [teamId], references: [id], name: "PlayerTeam")
+  teamId       Int
+  country      Location?      @relation(fields: [countryId], references: [id], name: "PlayerCountry")
+  countryId    Int
+  ratings      Rating[]      @relation(name: "PlayerRated")
+  performances Performance[] @relation(name: "PlayerPerformances")
+  matches        Match[]       @relation(name: "PlayerMatches")
+
+  @@unique([firstname, lastname, countryId, teamId])
+}
+
+model Rating {
+  id            Int         @id @default(autoincrement())
+  user          User        @relation(fields: [userId], references: [id], name: "UserRating")
+  userId        Int
+  player        Player      @relation(fields: [playerId], references: [id], name: "PlayerRated")
+  playerId      Int
+  performance   Performance @relation(fields: [performanceId], references: [id], name: "RatingPerformance")
+  performanceId Int
+  match         Match       @relation(fields: [matchId], references: [id], name: "RatingMatch")
+  matchId       Int
+  score         Int         @default(0)
+
+  @@unique([performanceId, userId, playerId])
+}
+
+model Performance {
+  id       Int      @id @default(autoincrement())
+  date     DateTime
+  player   Player   @relation(fields: [playerId], references: [id], name: "PlayerPerformances")
+  playerId Int
+  match    Match?    @relation(fields: [matchId], references: [id], name: "PerformanceMatch")
+  matchId  Int
+  ratings  Rating[] @relation(name: "RatingPerformance")
+
+  @@unique([playerId, matchId])
+}
+
+model Match {
+  id            Int           @id @default(autoincrement())
+  date          DateTime
+  hometeam      Team          @relation(fields: [hometeamId], references: [id], name: "HomeTeam")
+  awayteam      Team          @relation(fields: [awayteamId], references: [id], name: "AwayTeam")
+  hometeamId    Int
+  awayteamId    Int
+  performances   Performance[] @relation(name: "PerformanceMatch")
+  ratings       Rating[]      @relation(name: "RatingMatch")
+  players       Player[]      @relation(name: "PlayerMatches")
+  competition   Competition   @relation(fields: [competitionId], references: [id], name: "MatchCompetition")
+  competitionId Int
+  ratedBy    User[]        @relation(name: "MatchesRated")
+
+  @@unique([date, hometeamId, awayteamId])
+}
+
+model Competition {
+  id         Int      @id @default(autoincrement())
+  name       String
+  location   Location @relation(fields: [locationId], references: [id], name: "CompetitionLocation")
+  locationId Int
+  matches    Match[]  @relation(name: "MatchCompetition")
+
+  @@unique([name, locationId])
+}
+
+model Community {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  createdAt   DateTime @default(now())
+  createdBy   User     @relation(fields: [createdById], references: [id], name: "CreatedCommunities")
+  createdById Int
+  moderators  User[]   @relation(name: "ModeratedCommunities")
+  members     User[]   @relation(name: "Communities")
+  teams       Team[]   @relation(name: "CommunityTeams")
+}
+
+model Team {
+  id          Int         @id @default(autoincrement())
+  name        String
+  players     Player[]    @relation(name: "PlayerTeam")
+  location    Location    @relation(fields: [locationId], references: [id], name: "TeamLocation")
+  locationId  Int
+  homegames   Match[]     @relation(name: "HomeTeam")
+  awaygames   Match[]     @relation(name: "AwayTeam")
+  communities Community[] @relation(name: "CommunityTeams")
+
+  @@unique([locationId, name])
+}
+
+model Location {
+  id           Int           @id @default(autoincrement())
+  city         String
+  country      String
+  teams        Team[]        @relation(name: "TeamLocation")
+  users        User[]        @relation(name: "UserLocation")
+  players      Player[]      @relation(name: "PlayerCountry")
+  competitions Competition[] @relation(name: "CompetitionLocation")
+
+  @@unique([city, country])
 }
