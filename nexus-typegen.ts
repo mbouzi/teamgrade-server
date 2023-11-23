@@ -167,6 +167,7 @@ export interface NexusGenFieldTypes {
   Team: { // field return type
     awaygames: NexusGenRootTypes['Match'] | null; // Match
     communities: NexusGenRootTypes['Community'] | null; // Community
+    communityAverage: number | null; // Int
     homegames: NexusGenRootTypes['Match'] | null; // Match
     id: number; // Int!
     location: NexusGenRootTypes['Location'] | null; // Location
@@ -267,6 +268,7 @@ export interface NexusGenFieldTypeNames {
   Team: { // field return type name
     awaygames: 'Match'
     communities: 'Community'
+    communityAverage: 'Int'
     homegames: 'Match'
     id: 'Int'
     location: 'Location'

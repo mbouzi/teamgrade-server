@@ -90,6 +90,7 @@ type Rating {
 type Team {
   awaygames: Match
   communities: Community
+  communityAverage: Int
   homegames: Match
   id: Int!
   location: Location

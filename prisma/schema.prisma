@@ -38,7 +38,7 @@ model Player {
   countryId    Int?
   ratings      Rating[]      @relation(name: "PlayerRated")
   performances Performance[] @relation(name: "PlayerPerformances")
-  matches        Match[]       @relation(name: "PlayerMatches")
+  matches      Match[]       @relation(name: "PlayerMatches")
 
   @@unique([firstname, lastname, countryId, teamId])
 }
@@ -54,6 +54,8 @@ model Rating {
   match         Match       @relation(fields: [matchId], references: [id], name: "RatingMatch")
   matchId       Int
   score         Int         @default(0)
+  team Team @relation(fields: [teamId], references: [id], name: "TeamRatings")
+  teamId Int
 
   @@unique([performanceId, userId, playerId])
 }
@@ -117,6 +119,7 @@ model Team {
   homegames   Match[]     @relation(name: "HomeTeam")
   awaygames   Match[]     @relation(name: "AwayTeam")
   communities Community[] @relation(name: "CommunityTeams")
+    ratings Rating[] @relation(name: "TeamRatings")
 
   @@unique([locationId, name])
 }

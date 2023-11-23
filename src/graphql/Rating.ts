@@ -30,7 +30,7 @@ export const Rating = objectType({
             resolve(parent, args, context) {
                 return context.prisma.rating
                     .findUnique({where: {id: parent.id}})
-                    .matche();
+                    .match();
             }
         });
         t.field("performance", {

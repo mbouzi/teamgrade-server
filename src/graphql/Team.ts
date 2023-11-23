@@ -54,5 +54,13 @@ export const Team = objectType({
                     .communities();
             }
         });
+
+        t.field("communityAverage", {
+            type: "Int",
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                    .aggregate({where: {teamId: parent.id}, _avg: {score: true}});
+            }
+        });
     },
 });
