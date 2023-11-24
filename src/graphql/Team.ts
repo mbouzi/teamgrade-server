@@ -55,11 +55,34 @@ export const Team = objectType({
             }
         });
 
-        t.field("communityAverage", {
+        t.field("average", {
             type: "Int",
             resolve(parent, args, context) {
                 return context.prisma.rating
                     .aggregate({where: {teamId: parent.id}, _avg: {score: true}});
+            }
+        });
+
+        t.field("communityAverage", {
+            type: "Int",
+            args: {
+                communityId: intArg()
+            },
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                    .aggregate({where: {teamId: parent.id, communityId: args.communityId}, _avg: {score: true}});
+            }
+        });
+
+        t.field("userAverage", {
+            type: "Int",
+            resolve(parent, args, context) {
+                const { userId } = context;
+
+                if (!userId) null;
+
+                return context.prisma.rating
+                    .aggregate({where: {teamId: parent.id, userId: userId}, _avg: {score: true}});
             }
         });
     },

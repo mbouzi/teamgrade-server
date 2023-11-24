@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"  
+  url      = env("DATABASE_URL") 
 }
 
 generator client {
@@ -45,6 +45,7 @@ model Player {
 
 model Rating {
   id            Int         @id @default(autoincrement())
+  createdAt DateTime @default(now())
   user          User        @relation(fields: [userId], references: [id], name: "UserRating")
   userId        Int
   player        Player      @relation(fields: [playerId], references: [id], name: "PlayerRated")
@@ -56,8 +57,10 @@ model Rating {
   score         Int         @default(0)
   team Team @relation(fields: [teamId], references: [id], name: "TeamRatings")
   teamId Int
+  community Community @relation(fields: [communityId], references: [id], name: "CommunityRatings")
+  communityId Int
 
-  @@unique([performanceId, userId, playerId])
+  @@unique([performanceId, userId, playerId, communityId])
 }
 
 model Performance {
@@ -108,6 +111,7 @@ model Community {
   moderators  User[]   @relation(name: "ModeratedCommunities")
   members     User[]   @relation(name: "Communities")
   teams       Team[]   @relation(name: "CommunityTeams")
+  ratings Rating[] @relation(name: "CommunityRatings")
 }
 
 model Team {
