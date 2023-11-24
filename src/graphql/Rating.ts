@@ -17,14 +17,14 @@ export const Rating = objectType({
                     .user();
             }
         });
-        t.field("player", {
-            type: "Player",
-            resolve(parent, args, context) {
-                return context.prisma.rating
-                    .findUnique({where: {id: parent.id}})
-                    .player();
-            }
-        });
+        // t.field("player", {
+        //     type: "Player",
+        //     resolve(parent, args, context) {
+        //         return context.prisma.rating
+        //             .findUnique({where: {id: parent.id}})
+        //             .player();
+        //     }
+        // });
         t.field("match", {
             type: "Match",
             resolve(parent, args, context) {

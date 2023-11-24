@@ -6,7 +6,7 @@ export const Competition = objectType({
     definition(t) {
         t.nonNull.int("id"); 
         t.nonNull.string("name");
-        t.field("location", {
+        t.nonNull.field("location", {
             type: "Location",
             resolve(parent, args, context) {
                 return context.prisma.competition
@@ -14,7 +14,7 @@ export const Competition = objectType({
                     .location();
             }
         });
-        t.field("matches", {
+        t.nonNull.list.nonNull.field("matches", {
             type: "Match",
             resolve(parent, args, context) {
                 return context.prisma.competition

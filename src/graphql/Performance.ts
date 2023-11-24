@@ -21,12 +21,12 @@ export const Performance = objectType({
                     .player();
             }
         });
-        t.field("ratings", {
+        t.nonNull.list.nonNull.field("ratings", {
             type: "Rating",
             resolve(parent, args, context) {
-                return context.prisma.match
+                return context.prisma.performance
                     .findUnique({where: {id: parent.id}})
-                    .players();
+                    .ratings();
             }
         })
         t.field("match", {

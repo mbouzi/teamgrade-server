@@ -21,28 +21,28 @@ export const Match = objectType({
                     .awayteam();
             }
         });
-        t.field("performance", {
+        t.nonNull.list.nonNull.field("performances", {
             type: "Performance",
             resolve(parent, args, context) {
                 return context.prisma.match
                     .findUnique({where: {id: parent.id}})
-                    .performance();
+                    .performances();
             }
         });
-        t.field("ratings", {
+        t.nonNull.list.nonNull.field("ratings", {
             type: "Rating",
             resolve(parent, args, context) {
                 return context.prisma.match
                     .findUnique({where: {id: parent.id}})
-                    .players();
+                    .ratings();
             }
         });
-        t.field("competitions", {
+        t.field("competition", {
             type: "Competition",
             resolve(parent, args, context) {
                 return context.prisma.match
                     .findUnique({where: {id: parent.id}})
-                    .competitions();
+                    .competition();
             }
         });
         t.field("ratedBy", {
@@ -54,37 +54,6 @@ export const Match = objectType({
             }
         });
 
-        t.field("average", {
-            type: "Int",
-            resolve(parent, args, context) {
-                return context.prisma.rating
-                    .aggregate({where: {matchId: parent.id}, _avg: {score: true}});
-            }
-        });
-
-        t.field("communityAverage", {
-            type: "Int",
-            args: {
-                communityId: intArg()
-            },
-            resolve(parent, args, context) {
-
-                return context.prisma.rating
-                    .aggregate({where: {matchId: parent.id, communityId: args.communityId}, _avg: {score: true}});
-            }
-        });
-
-        t.field("userAverage", {
-            type: "Int",
-            resolve(parent, args, context) {
-                const { userId } = context;
-
-                if (!userId) null;
-
-                return context.prisma.rating
-                    .aggregate({where: {matchId: parent.id, userId}, _avg: {score: true}});
-            }
-        });
     },
 });
 

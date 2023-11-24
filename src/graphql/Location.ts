@@ -7,7 +7,7 @@ export const Location = objectType({
         t.nonNull.int("id"); 
         t.nonNull.int("city"); 
         t.nonNull.string("country");
-        t.field("teams", {
+        t.nonNull.list.nonNull.field("teams", {
             type: "Team",
             resolve(parent, args, context) {
                 return context.prisma.location
@@ -15,7 +15,7 @@ export const Location = objectType({
                     .teams();
             }
         });
-        t.field("users", {
+        t.nonNull.list.nonNull.field("users", {
             type: "User",
             resolve(parent, args, context) {
                 return context.prisma.location
@@ -23,7 +23,7 @@ export const Location = objectType({
                     .users();
             }
         });
-        t.field("players", {
+        t.nonNull.list.nonNull.field("players", {
             type: "Player",
             resolve(parent, args, context) {
                 return context.prisma.location
@@ -31,7 +31,7 @@ export const Location = objectType({
                     .players();
             }
         });
-        t.field("competitions", {
+        t.nonNull.list.nonNull.field("competitions", {
             type: "Competition",
             resolve(parent, args, context) {
                 return context.prisma.location

@@ -9,40 +9,38 @@ type AuthPayload {
 
 type Community {
   id: Int!
-  members: User
-  moderators: User
+  members: [User!]!
+  moderators: [User!]!
+  name: String!
   string: String!
-  teams: Team
+  teams: [Team!]!
 }
 
 type Competition {
   id: Int!
-  location: Location
-  matches: Match
+  location: Location!
+  matches: [Match!]!
   name: String!
 }
 
 type Location {
   city: Int!
-  competitions: Competition
+  competitions: [Competition!]!
   country: String!
   id: Int!
-  players: Player
-  teams: Team
-  users: User
+  players: [Player!]!
+  teams: [Team!]!
+  users: [User!]!
 }
 
 type Match {
-  average: Int
   awayteam: Team
-  communityAverage(communityId: Int): Int
-  competitions: Competition
+  competition: Competition
   hometeam: Team
   id: Int!
-  performance: Performance
+  performances: [Performance!]!
   ratedBy: User
-  ratings: Rating
-  userAverage: Int
+  ratings: [Rating!]!
 }
 
 type Mutation {
@@ -58,7 +56,7 @@ type Performance {
   id: Int!
   match: Match
   player: Player
-  ratings: Rating
+  ratings: [Rating!]!
   teams: Team
 }
 
@@ -71,9 +69,9 @@ type Player {
   id: Int!
   lastUserRating: Int
   lastname: String!
-  matches: Match
-  performances: Performance
-  ratings: Rating
+  matches: [Match!]!
+  performances: [Performance!]!
+  ratings: [Rating!]!
   team: Team
   userAverage: Int
 }
@@ -89,22 +87,20 @@ type Rating {
   lastname: String!
   match: Match
   performance: Performance
-  player: Player
   score: Int!
   user: User
 }
 
 type Team {
   average: Int
-  awaygames: Match
-  communities: Community
+  awaygames: [Match!]!
+  communities: [Community!]!
   communityAverage(communityId: Int): Int
-  homegames: Match
+  homegames: [Match!]!
   id: Int!
   location: Location
-  match: Match
   name: String!
-  players: Player
+  players: [Player!]!
   userAverage: Int
 }
 

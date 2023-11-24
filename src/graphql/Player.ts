@@ -24,7 +24,7 @@ export const Player = objectType({
                     .country();
             }
         });
-        t.field("ratings", {
+        t.nonNull.list.nonNull.field("ratings", {
             type: "Rating",
             resolve(parent, args, context) {
                 return context.prisma.player
@@ -32,7 +32,7 @@ export const Player = objectType({
                     .ratings();
             }
         });
-        t.field("matches", {
+        t.nonNull.list.nonNull.field("matches", {
             type: "Match",
             resolve(parent, args, context) {
                 return context.prisma.player
@@ -40,7 +40,7 @@ export const Player = objectType({
                     .matches();
             }
         });
-        t.field("performances", {
+        t.nonNull.list.nonNull.field("performances", {
             type: "Performance",
             resolve(parent, args, context) {
                 return context.prisma.player

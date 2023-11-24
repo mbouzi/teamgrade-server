@@ -6,7 +6,8 @@ export const Community = objectType({
     definition(t) {
         t.nonNull.int("id"); 
         t.nonNull.string("string");
-        t.field("moderators", {
+        t.nonNull.string("name");
+        t.nonNull.list.nonNull.field("moderators", {
             type: "User",
             resolve(parent, args, context) {
                 return context.prisma.community
@@ -14,7 +15,7 @@ export const Community = objectType({
                     .moderators();
             }
         })
-        t.field("members", {
+        t.nonNull.list.nonNull.field("members", {
             type: "User",
             resolve(parent, args, context) {
                 return context.prisma.community
@@ -22,7 +23,7 @@ export const Community = objectType({
                     .members();
             }
         })
-        t.field("teams", {
+        t.nonNull.list.nonNull.field("teams", {
             type: "Team",
             resolve(parent, args, context) {
                 return context.prisma.community
@@ -53,14 +54,14 @@ export const CommunityMutation = extendType({
 
                 const { name, teamId} = args;
 
-                const newPlayer = await context.prisma.community.create({
+                const newCommunity = await context.prisma.community.create({
                     data: {
                         teams: { connect: { id: teamId }},
                         createdBy: { connect: { id: userId }},
                         name
                     },
                 });
-                return newPlayer;
+                return newCommunity;
             },
         });
 

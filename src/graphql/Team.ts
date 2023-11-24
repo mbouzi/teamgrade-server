@@ -6,7 +6,7 @@ export const Team = objectType({
     definition(t) {
         t.nonNull.int("id"); 
         t.nonNull.string("name"); 
-        t.field("players", {
+        t.nonNull.list.nonNull.field("players", {
             type: "Player",
             resolve(parent, args, context) {
                 return context.prisma.team
@@ -22,15 +22,8 @@ export const Team = objectType({
                     .location();
             }
         });
-        t.field("match", {
-            type: "Match",
-            resolve(parent, args, context) {
-                return context.prisma.performance
-                    .findUnique({where: {id: parent.id}})
-                    .match();
-            }
-        });
-        t.field("homegames", {
+       
+        t.nonNull.list.nonNull.field("homegames", {
             type: "Match",
             resolve(parent, args, context) {
                 return context.prisma.team
@@ -38,7 +31,7 @@ export const Team = objectType({
                     .homegames();
             }
         });
-        t.field("awaygames", {
+        t.nonNull.list.nonNull.field("awaygames", {
             type: "Match",
             resolve(parent, args, context) {
                 return context.prisma.team
@@ -46,7 +39,7 @@ export const Team = objectType({
                     .awaygames();
             }
         });
-        t.field("communities", {
+        t.nonNull.list.nonNull.field("communities", {
             type: "Community",
             resolve(parent, args, context) {
                 return context.prisma.team

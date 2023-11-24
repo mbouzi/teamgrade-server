@@ -34,6 +34,7 @@ export interface NexusGenObjects {
   }
   Community: { // root type
     id: number; // Int!
+    name: string; // String!
     string: string; // String!
   }
   Competition: { // root type
@@ -95,37 +96,35 @@ export interface NexusGenFieldTypes {
   }
   Community: { // field return type
     id: number; // Int!
-    members: NexusGenRootTypes['User'] | null; // User
-    moderators: NexusGenRootTypes['User'] | null; // User
+    members: NexusGenRootTypes['User'][]; // [User!]!
+    moderators: NexusGenRootTypes['User'][]; // [User!]!
+    name: string; // String!
     string: string; // String!
-    teams: NexusGenRootTypes['Team'] | null; // Team
+    teams: NexusGenRootTypes['Team'][]; // [Team!]!
   }
   Competition: { // field return type
     id: number; // Int!
-    location: NexusGenRootTypes['Location'] | null; // Location
-    matches: NexusGenRootTypes['Match'] | null; // Match
+    location: NexusGenRootTypes['Location']; // Location!
+    matches: NexusGenRootTypes['Match'][]; // [Match!]!
     name: string; // String!
   }
   Location: { // field return type
     city: number; // Int!
-    competitions: NexusGenRootTypes['Competition'] | null; // Competition
+    competitions: NexusGenRootTypes['Competition'][]; // [Competition!]!
     country: string; // String!
     id: number; // Int!
-    players: NexusGenRootTypes['Player'] | null; // Player
-    teams: NexusGenRootTypes['Team'] | null; // Team
-    users: NexusGenRootTypes['User'] | null; // User
+    players: NexusGenRootTypes['Player'][]; // [Player!]!
+    teams: NexusGenRootTypes['Team'][]; // [Team!]!
+    users: NexusGenRootTypes['User'][]; // [User!]!
   }
   Match: { // field return type
-    average: number | null; // Int
     awayteam: NexusGenRootTypes['Team'] | null; // Team
-    communityAverage: number | null; // Int
-    competitions: NexusGenRootTypes['Competition'] | null; // Competition
+    competition: NexusGenRootTypes['Competition'] | null; // Competition
     hometeam: NexusGenRootTypes['Team'] | null; // Team
     id: number; // Int!
-    performance: NexusGenRootTypes['Performance'] | null; // Performance
+    performances: NexusGenRootTypes['Performance'][]; // [Performance!]!
     ratedBy: NexusGenRootTypes['User'] | null; // User
-    ratings: NexusGenRootTypes['Rating'] | null; // Rating
-    userAverage: number | null; // Int
+    ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
   }
   Mutation: { // field return type
     addNewMember: NexusGenRootTypes['Community']; // Community!
@@ -139,7 +138,7 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     match: NexusGenRootTypes['Match'] | null; // Match
     player: NexusGenRootTypes['Player'] | null; // Player
-    ratings: NexusGenRootTypes['Rating'] | null; // Rating
+    ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
     teams: NexusGenRootTypes['Team'] | null; // Team
   }
   Player: { // field return type
@@ -151,9 +150,9 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     lastUserRating: number | null; // Int
     lastname: string; // String!
-    matches: NexusGenRootTypes['Match'] | null; // Match
-    performances: NexusGenRootTypes['Performance'] | null; // Performance
-    ratings: NexusGenRootTypes['Rating'] | null; // Rating
+    matches: NexusGenRootTypes['Match'][]; // [Match!]!
+    performances: NexusGenRootTypes['Performance'][]; // [Performance!]!
+    ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
     team: NexusGenRootTypes['Team'] | null; // Team
     userAverage: number | null; // Int
   }
@@ -167,21 +166,19 @@ export interface NexusGenFieldTypes {
     lastname: string; // String!
     match: NexusGenRootTypes['Match'] | null; // Match
     performance: NexusGenRootTypes['Performance'] | null; // Performance
-    player: NexusGenRootTypes['Player'] | null; // Player
     score: number; // Int!
     user: NexusGenRootTypes['User'] | null; // User
   }
   Team: { // field return type
     average: number | null; // Int
-    awaygames: NexusGenRootTypes['Match'] | null; // Match
-    communities: NexusGenRootTypes['Community'] | null; // Community
+    awaygames: NexusGenRootTypes['Match'][]; // [Match!]!
+    communities: NexusGenRootTypes['Community'][]; // [Community!]!
     communityAverage: number | null; // Int
-    homegames: NexusGenRootTypes['Match'] | null; // Match
+    homegames: NexusGenRootTypes['Match'][]; // [Match!]!
     id: number; // Int!
     location: NexusGenRootTypes['Location'] | null; // Location
-    match: NexusGenRootTypes['Match'] | null; // Match
     name: string; // String!
-    players: NexusGenRootTypes['Player'] | null; // Player
+    players: NexusGenRootTypes['Player'][]; // [Player!]!
     userAverage: number | null; // Int
   }
   User: { // field return type
@@ -207,6 +204,7 @@ export interface NexusGenFieldTypeNames {
     id: 'Int'
     members: 'User'
     moderators: 'User'
+    name: 'String'
     string: 'String'
     teams: 'Team'
   }
@@ -226,16 +224,13 @@ export interface NexusGenFieldTypeNames {
     users: 'User'
   }
   Match: { // field return type name
-    average: 'Int'
     awayteam: 'Team'
-    communityAverage: 'Int'
-    competitions: 'Competition'
+    competition: 'Competition'
     hometeam: 'Team'
     id: 'Int'
-    performance: 'Performance'
+    performances: 'Performance'
     ratedBy: 'User'
     ratings: 'Rating'
-    userAverage: 'Int'
   }
   Mutation: { // field return type name
     addNewMember: 'Community'
@@ -277,7 +272,6 @@ export interface NexusGenFieldTypeNames {
     lastname: 'String'
     match: 'Match'
     performance: 'Performance'
-    player: 'Player'
     score: 'Int'
     user: 'User'
   }
@@ -289,7 +283,6 @@ export interface NexusGenFieldTypeNames {
     homegames: 'Match'
     id: 'Int'
     location: 'Location'
-    match: 'Match'
     name: 'String'
     players: 'Player'
     userAverage: 'Int'
@@ -309,11 +302,6 @@ export interface NexusGenFieldTypeNames {
 }
 
 export interface NexusGenArgTypes {
-  Match: {
-    communityAverage: { // args
-      communityId?: number | null; // Int
-    }
-  }
   Mutation: {
     addNewMember: { // args
       communityId: number; // Int!
