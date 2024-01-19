@@ -5,38 +5,34 @@ export const Location = objectType({
     name: "Location",
     definition(t) {
         t.nonNull.int("id"); 
-        t.nonNull.int("city"); 
+        t.nonNull.string("city"); 
         t.nonNull.string("country");
         t.nonNull.list.nonNull.field("teams", {
             type: "Team",
             resolve(parent, args, context) {
-                return context.prisma.location
-                    .findUnique({where: {id: parent.id}})
-                    .teams();
+                return context.prisma.team
+                    .findMany({where: {locationId: parent.id}})
             }
         });
         t.nonNull.list.nonNull.field("users", {
             type: "User",
             resolve(parent, args, context) {
-                return context.prisma.location
-                    .findUnique({where: {id: parent.id}})
-                    .users();
+                return context.prisma.user
+                    .findMany({where: {locationId: parent.id}})
             }
         });
         t.nonNull.list.nonNull.field("players", {
             type: "Player",
             resolve(parent, args, context) {
-                return context.prisma.location
-                    .findUnique({where: {id: parent.id}})
-                    .players();
+                return context.prisma.player
+                    .findMany({where: {countryId: parent.id}})
             }
         });
         t.nonNull.list.nonNull.field("competitions", {
             type: "Competition",
             resolve(parent, args, context) {
-                return context.prisma.location
-                    .findUnique({where: {id: parent.id}})
-                    .competitions();
+                return context.prisma.competition
+                    .findMany({where: {locationId: parent.id}})
             }
         });
     },

@@ -27,70 +27,70 @@ export const Player = objectType({
         t.nonNull.list.nonNull.field("ratings", {
             type: "Rating",
             resolve(parent, args, context) {
-                return context.prisma.player
-                    .findUnique({where: {id: parent.id}})
-                    .ratings();
+                return context.prisma.rating
+                    .findMany({where: {playerId: parent.id}})
             }
         });
         t.nonNull.list.nonNull.field("matches", {
             type: "Match",
             resolve(parent, args, context) {
-                return context.prisma.player
-                    .findUnique({where: {id: parent.id}})
-                    .matches();
+                return context.prisma.match
+                    .findMany({where: {players: {some: {id: parent.id}} }})
             }
         });
+
         t.nonNull.list.nonNull.field("performances", {
             type: "Performance",
             resolve(parent, args, context) {
-                return context.prisma.player
-                    .findUnique({where: {id: parent.id}})
-                    .performances();
+                return context.prisma.performance
+                    .findMany({where: {} })
             }
         })
 
-        t.field("average", {
-            type: "Int",
-            resolve(parent, args, context) {
-                return context.prisma.rating
-                    .aggregate({where: {playerId: parent.id}, _avg: {score: true}});
-            }
-        });
+        // t.field("average", {
+        //     type: "Int",
+        //     resolve(parent, args, context) {
+        //         return context.prisma.rating
+        //             .aggregate({where: {playerId: parent.id}, _avg: {score: true}});
+        //     }
+        // });
 
-        t.field("userAverage", {
-            type: "Int",
-            resolve(parent, args, context) {
-                const { userId } = context;
+        // t.field("userAverage", {
+        //     type: "Int",
+        //     resolve(parent, args, context) {
+        //         const { userId } = context;
 
-                if (!userId) null;
+        //         if (!userId) null;
 
-                return context.prisma.rating
-                    .aggregate({where: {playerId: parent.id, userId}, _avg: {score: true}});
-            }
-        });
+        //         return context.prisma.rating
+        //             .aggregate({where: {playerId: parent.id, userId}, _avg: {score: true}});
+        //     }
+        // });
 
-        t.field("communityAverage", {
-            type: "Int",
-            args: {
-                communityId: intArg()
-            },
-            resolve(parent, args, context) {
+        // t.field("communityAverage", {
+        //     type: "Int",
+        //     args: {
+        //         communityId: intArg()
+        //     },
+        //     resolve(parent, args, context) {
                 
-                return context.prisma.rating
-                    .aggregate({where: {playerId: parent.id, communityId: args.communityId}, _avg: {score: true}});
-            }
-        });
+        //         return context.prisma.rating
+        //             .aggregate({where: {playerId: parent.id, communityId: args.communityId}, _avg: {score: true}});
+        //     }
+        // });
 
-        t.field("lastUserRating", {
-            type: "Int",
-            resolve(parent, args, context) {
-                const { userId } = context;
+        // t.field("lastUserRating", {
+        //     type: "Int",
+        //     async resolve(parent, args, context) {
+        //         const { userId } = context;
 
-                if (!userId) null;
+        //         if (!userId) null;
 
-                return context.prisma.rating
-                    .findFirst({where: {playerId: parent.id, userId}, take: 1, orderBy: {createdAt: 'desc'}});
-            }
-        });
+        //         const rating = await context.prisma.rating
+        //             .findFirst({where: {playerId: parent.id, userId}, take: 1, orderBy: {createdAt: 'desc'}});
+                
+        //         return rating?.score;
+        //     }
+        // });
     },
 });

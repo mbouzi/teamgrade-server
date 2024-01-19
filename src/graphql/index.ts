@@ -8,3 +8,4 @@ export * from "./Match";
 export * from "./Performance";
 export * from "./Rating";
 export * from "./Team";
+export * from "./scalers/Date";

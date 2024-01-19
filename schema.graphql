@@ -8,23 +8,28 @@ type AuthPayload {
 }
 
 type Community {
+  createdBy: User
   id: Int!
   members: [User!]!
   moderators: [User!]!
   name: String!
-  string: String!
   teams: [Team!]!
 }
 
 type Competition {
   id: Int!
-  location: Location!
+  location: Location
   matches: [Match!]!
   name: String!
 }
 
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
 type Location {
-  city: Int!
+  city: String!
   competitions: [Competition!]!
   country: String!
   id: Int!
@@ -36,9 +41,12 @@ type Location {
 type Match {
   awayteam: Team
   competition: Competition
+  date: DateTime!
   hometeam: Team
   id: Int!
+  location: Location
   performances: [Performance!]!
+  players: [Player!]!
   ratedBy: User
   ratings: [Rating!]!
 }
@@ -46,34 +54,29 @@ type Match {
 type Mutation {
   addNewMember(communityId: Int!, userId: Int!): Community!
   createCommunity(name: String!, teamId: Int!): Community!
-  createMatch(awayteamId: Int!, competitionId: Int!, date: String!, hometeamId: Int!): Match!
   login(email: String!, password: String!): AuthPayload!
   ratePlayer(communityId: Int!, matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!, teamId: Int!): Rating!
   signup(email: String!, password: String!, username: String!): AuthPayload!
 }
 
 type Performance {
+  date: DateTime!
   id: Int!
   match: Match
   player: Player
   ratings: [Rating!]!
-  teams: Team
 }
 
 type Player {
   age: Int
-  average: Int
-  communityAverage(communityId: Int): Int
   country: Location
   firstname: String!
   id: Int!
-  lastUserRating: Int
   lastname: String!
   matches: [Match!]!
   performances: [Performance!]!
   ratings: [Rating!]!
   team: Team
-  userAverage: Int
 }
 
 type Query {
@@ -81,27 +84,27 @@ type Query {
 }
 
 type Rating {
-  age: Int
-  firstname: String!
+  community: Community
+  createdAt: DateTime!
   id: Int!
-  lastname: String!
   match: Match
   performance: Performance
+  player: Player
   score: Int!
+  team: Team
   user: User
 }
 
 type Team {
-  average: Int
   awaygames: [Match!]!
   communities: [Community!]!
-  communityAverage(communityId: Int): Int
+  competitions: [Competition!]!
   homegames: [Match!]!
   id: Int!
   location: Location
   name: String!
   players: [Player!]!
-  userAverage: Int
+  ratings: [Rating!]!
 }
 
 type User {
@@ -113,6 +116,7 @@ type User {
   location: Location
   matchesRated: Match
   moderatedCommunities: Community
-  ratings: Rating
+  profileImg: String
+  ratings: [Rating!]!
   username: String!
 }

@@ -5,8 +5,23 @@
 
 
 import type { Context } from "./src/context"
-
-
+import type { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    dateTime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+     */
+    dateTime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+  }
+}
 
 
 declare global {
@@ -25,6 +40,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  DateTime: any
 }
 
 export interface NexusGenObjects {
@@ -35,22 +51,23 @@ export interface NexusGenObjects {
   Community: { // root type
     id: number; // Int!
     name: string; // String!
-    string: string; // String!
   }
   Competition: { // root type
     id: number; // Int!
     name: string; // String!
   }
   Location: { // root type
-    city: number; // Int!
+    city: string; // String!
     country: string; // String!
     id: number; // Int!
   }
   Match: { // root type
+    date: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
   }
   Mutation: {};
   Performance: { // root type
+    date: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
   }
   Player: { // root type
@@ -61,10 +78,8 @@ export interface NexusGenObjects {
   }
   Query: {};
   Rating: { // root type
-    age?: number | null; // Int
-    firstname: string; // String!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
-    lastname: string; // String!
     score: number; // Int!
   }
   Team: { // root type
@@ -75,6 +90,7 @@ export interface NexusGenObjects {
     displayname?: string | null; // String
     email: string; // String!
     id: number; // Int!
+    profileImg?: string | null; // String
     username: string; // String!
   }
 }
@@ -95,21 +111,21 @@ export interface NexusGenFieldTypes {
     user: NexusGenRootTypes['User']; // User!
   }
   Community: { // field return type
+    createdBy: NexusGenRootTypes['User'] | null; // User
     id: number; // Int!
     members: NexusGenRootTypes['User'][]; // [User!]!
     moderators: NexusGenRootTypes['User'][]; // [User!]!
     name: string; // String!
-    string: string; // String!
     teams: NexusGenRootTypes['Team'][]; // [Team!]!
   }
   Competition: { // field return type
     id: number; // Int!
-    location: NexusGenRootTypes['Location']; // Location!
+    location: NexusGenRootTypes['Location'] | null; // Location
     matches: NexusGenRootTypes['Match'][]; // [Match!]!
     name: string; // String!
   }
   Location: { // field return type
-    city: number; // Int!
+    city: string; // String!
     competitions: NexusGenRootTypes['Competition'][]; // [Competition!]!
     country: string; // String!
     id: number; // Int!
@@ -120,66 +136,64 @@ export interface NexusGenFieldTypes {
   Match: { // field return type
     awayteam: NexusGenRootTypes['Team'] | null; // Team
     competition: NexusGenRootTypes['Competition'] | null; // Competition
+    date: NexusGenScalars['DateTime']; // DateTime!
     hometeam: NexusGenRootTypes['Team'] | null; // Team
     id: number; // Int!
+    location: NexusGenRootTypes['Location'] | null; // Location
     performances: NexusGenRootTypes['Performance'][]; // [Performance!]!
+    players: NexusGenRootTypes['Player'][]; // [Player!]!
     ratedBy: NexusGenRootTypes['User'] | null; // User
     ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
   }
   Mutation: { // field return type
     addNewMember: NexusGenRootTypes['Community']; // Community!
     createCommunity: NexusGenRootTypes['Community']; // Community!
-    createMatch: NexusGenRootTypes['Match']; // Match!
     login: NexusGenRootTypes['AuthPayload']; // AuthPayload!
     ratePlayer: NexusGenRootTypes['Rating']; // Rating!
     signup: NexusGenRootTypes['AuthPayload']; // AuthPayload!
   }
   Performance: { // field return type
+    date: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     match: NexusGenRootTypes['Match'] | null; // Match
     player: NexusGenRootTypes['Player'] | null; // Player
     ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
-    teams: NexusGenRootTypes['Team'] | null; // Team
   }
   Player: { // field return type
     age: number | null; // Int
-    average: number | null; // Int
-    communityAverage: number | null; // Int
     country: NexusGenRootTypes['Location'] | null; // Location
     firstname: string; // String!
     id: number; // Int!
-    lastUserRating: number | null; // Int
     lastname: string; // String!
     matches: NexusGenRootTypes['Match'][]; // [Match!]!
     performances: NexusGenRootTypes['Performance'][]; // [Performance!]!
     ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
     team: NexusGenRootTypes['Team'] | null; // Team
-    userAverage: number | null; // Int
   }
   Query: { // field return type
     ok: boolean; // Boolean!
   }
   Rating: { // field return type
-    age: number | null; // Int
-    firstname: string; // String!
+    community: NexusGenRootTypes['Community'] | null; // Community
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
-    lastname: string; // String!
     match: NexusGenRootTypes['Match'] | null; // Match
     performance: NexusGenRootTypes['Performance'] | null; // Performance
+    player: NexusGenRootTypes['Player'] | null; // Player
     score: number; // Int!
+    team: NexusGenRootTypes['Team'] | null; // Team
     user: NexusGenRootTypes['User'] | null; // User
   }
   Team: { // field return type
-    average: number | null; // Int
     awaygames: NexusGenRootTypes['Match'][]; // [Match!]!
     communities: NexusGenRootTypes['Community'][]; // [Community!]!
-    communityAverage: number | null; // Int
+    competitions: NexusGenRootTypes['Competition'][]; // [Competition!]!
     homegames: NexusGenRootTypes['Match'][]; // [Match!]!
     id: number; // Int!
     location: NexusGenRootTypes['Location'] | null; // Location
     name: string; // String!
     players: NexusGenRootTypes['Player'][]; // [Player!]!
-    userAverage: number | null; // Int
+    ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
   }
   User: { // field return type
     communities: NexusGenRootTypes['Community'] | null; // Community
@@ -190,7 +204,8 @@ export interface NexusGenFieldTypes {
     location: NexusGenRootTypes['Location'] | null; // Location
     matchesRated: NexusGenRootTypes['Match'] | null; // Match
     moderatedCommunities: NexusGenRootTypes['Community'] | null; // Community
-    ratings: NexusGenRootTypes['Rating'] | null; // Rating
+    profileImg: string | null; // String
+    ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
     username: string; // String!
   }
 }
@@ -201,11 +216,11 @@ export interface NexusGenFieldTypeNames {
     user: 'User'
   }
   Community: { // field return type name
+    createdBy: 'User'
     id: 'Int'
     members: 'User'
     moderators: 'User'
     name: 'String'
-    string: 'String'
     teams: 'Team'
   }
   Competition: { // field return type name
@@ -215,7 +230,7 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
   }
   Location: { // field return type name
-    city: 'Int'
+    city: 'String'
     competitions: 'Competition'
     country: 'String'
     id: 'Int'
@@ -226,66 +241,64 @@ export interface NexusGenFieldTypeNames {
   Match: { // field return type name
     awayteam: 'Team'
     competition: 'Competition'
+    date: 'DateTime'
     hometeam: 'Team'
     id: 'Int'
+    location: 'Location'
     performances: 'Performance'
+    players: 'Player'
     ratedBy: 'User'
     ratings: 'Rating'
   }
   Mutation: { // field return type name
     addNewMember: 'Community'
     createCommunity: 'Community'
-    createMatch: 'Match'
     login: 'AuthPayload'
     ratePlayer: 'Rating'
     signup: 'AuthPayload'
   }
   Performance: { // field return type name
+    date: 'DateTime'
     id: 'Int'
     match: 'Match'
     player: 'Player'
     ratings: 'Rating'
-    teams: 'Team'
   }
   Player: { // field return type name
     age: 'Int'
-    average: 'Int'
-    communityAverage: 'Int'
     country: 'Location'
     firstname: 'String'
     id: 'Int'
-    lastUserRating: 'Int'
     lastname: 'String'
     matches: 'Match'
     performances: 'Performance'
     ratings: 'Rating'
     team: 'Team'
-    userAverage: 'Int'
   }
   Query: { // field return type name
     ok: 'Boolean'
   }
   Rating: { // field return type name
-    age: 'Int'
-    firstname: 'String'
+    community: 'Community'
+    createdAt: 'DateTime'
     id: 'Int'
-    lastname: 'String'
     match: 'Match'
     performance: 'Performance'
+    player: 'Player'
     score: 'Int'
+    team: 'Team'
     user: 'User'
   }
   Team: { // field return type name
-    average: 'Int'
     awaygames: 'Match'
     communities: 'Community'
-    communityAverage: 'Int'
+    competitions: 'Competition'
     homegames: 'Match'
     id: 'Int'
     location: 'Location'
     name: 'String'
     players: 'Player'
-    userAverage: 'Int'
+    ratings: 'Rating'
   }
   User: { // field return type name
     communities: 'Community'
@@ -296,6 +309,7 @@ export interface NexusGenFieldTypeNames {
     location: 'Location'
     matchesRated: 'Match'
     moderatedCommunities: 'Community'
+    profileImg: 'String'
     ratings: 'Rating'
     username: 'String'
   }
@@ -310,12 +324,6 @@ export interface NexusGenArgTypes {
     createCommunity: { // args
       name: string; // String!
       teamId: number; // Int!
-    }
-    createMatch: { // args
-      awayteamId: number; // Int!
-      competitionId: number; // Int!
-      date: string; // String!
-      hometeamId: number; // Int!
     }
     login: { // args
       email: string; // String!
@@ -333,16 +341,6 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
       username: string; // String!
-    }
-  }
-  Player: {
-    communityAverage: { // args
-      communityId?: number | null; // Int
-    }
-  }
-  Team: {
-    communityAverage: { // args
-      communityId?: number | null; // Int
     }
   }
 }

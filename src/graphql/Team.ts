@@ -9,74 +9,89 @@ export const Team = objectType({
         t.nonNull.list.nonNull.field("players", {
             type: "Player",
             resolve(parent, args, context) {
-                return context.prisma.team
-                    .findUnique({where: {id: parent.id}})
-                    .players();
+                return context.prisma.player
+                    .findMany({where: {team: {id: parent.id}}});
             }
         });
+        
         t.field("location", {
             type: "Location",
             resolve(parent, args, context) {
                 return context.prisma.team
                     .findUnique({where: {id: parent.id}})
-                    .location();
+                        .location()
             }
         });
        
         t.nonNull.list.nonNull.field("homegames", {
             type: "Match",
             resolve(parent, args, context) {
-                return context.prisma.team
-                    .findUnique({where: {id: parent.id}})
-                    .homegames();
+                return context.prisma.match
+                    .findMany({where: {hometeamId: parent.id}})
             }
         });
+
         t.nonNull.list.nonNull.field("awaygames", {
             type: "Match",
             resolve(parent, args, context) {
-                return context.prisma.team
-                    .findUnique({where: {id: parent.id}})
-                    .awaygames();
+                return context.prisma.match
+                    .findMany({where: {awayteamId: parent.id}})
             }
         });
+
         t.nonNull.list.nonNull.field("communities", {
             type: "Community",
             resolve(parent, args, context) {
-                return context.prisma.team
-                    .findUnique({where: {id: parent.id}})
-                    .communities();
+                return context.prisma.community
+                    .findMany({where: {teams: {some: {id: parent.id}}}});
             }
         });
 
-        t.field("average", {
-            type: "Int",
+        t.nonNull.list.nonNull.field("ratings", {
+            type: "Rating",
             resolve(parent, args, context) {
                 return context.prisma.rating
-                    .aggregate({where: {teamId: parent.id}, _avg: {score: true}});
+                    .findMany({where: {teamId: parent.id}});
             }
         });
 
-        t.field("communityAverage", {
-            type: "Int",
-            args: {
-                communityId: intArg()
-            },
+        t.nonNull.list.nonNull.field("competitions", {
+            type: "Competition",
             resolve(parent, args, context) {
-                return context.prisma.rating
-                    .aggregate({where: {teamId: parent.id, communityId: args.communityId}, _avg: {score: true}});
+                return context.prisma.competition
+                    .findMany({where: {teams: {some: {id: parent.id}}}});
             }
         });
 
-        t.field("userAverage", {
-            type: "Int",
-            resolve(parent, args, context) {
-                const { userId } = context;
+        // t.field("average", {
+        //     type: "Int",
+        //     resolve(parent, args, context) {
+        //         return context.prisma.rating
+        //             .aggregate({where: {teamId: parent.id}, _avg: {score: true}});
+        //     }
+        // });
 
-                if (!userId) null;
+        // t.field("communityAverage", {
+        //     type: "Int",
+        //     args: {
+        //         communityId: intArg()
+        //     },
+        //     resolve(parent, args, context) {
+        //         return context.prisma.rating
+        //             .aggregate({where: {teamId: parent.id, communityId: args.communityId}, _avg: {score: true}});
+        //     }
+        // });
 
-                return context.prisma.rating
-                    .aggregate({where: {teamId: parent.id, userId: userId}, _avg: {score: true}});
-            }
-        });
+        // t.field("userAverage", {
+        //     type: "Int",
+        //     resolve(parent, args, context) {
+        //         const { userId } = context;
+
+        //         if (!userId) null;
+
+        //         return context.prisma.rating
+        //             .aggregate({where: {teamId: parent.id, userId: userId}, _avg: {score: true}});
+        //     }
+        // });
     },
 });

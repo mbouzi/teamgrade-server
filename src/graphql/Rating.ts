@@ -5,10 +5,8 @@ export const Rating = objectType({
     name: "Rating",
     definition(t) {
         t.nonNull.int("id"); 
-        t.nonNull.string("firstname"); 
-        t.nonNull.string("lastname");
         t.nonNull.int("score"); 
-        t.int("age"); 
+        t.nonNull.dateTime("createdAt"); 
         t.field("user", {
             type: "User",
             resolve(parent, args, context) {
@@ -17,14 +15,30 @@ export const Rating = objectType({
                     .user();
             }
         });
-        // t.field("player", {
-        //     type: "Player",
-        //     resolve(parent, args, context) {
-        //         return context.prisma.rating
-        //             .findUnique({where: {id: parent.id}})
-        //             .player();
-        //     }
-        // });
+        t.field("community", {
+            type: "Community",
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                    .findUnique({where: {id: parent.id}})
+                    .community();
+            }
+        });
+        t.field("team", {
+            type: "Team",
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                    .findUnique({where: {id: parent.id}})
+                    .team();
+            }
+        });
+        t.field("player", {
+            type: "Player",
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                    .findUnique({where: {id: parent.id}})
+                    .player();            
+            }
+        });
         t.field("match", {
             type: "Match",
             resolve(parent, args, context) {
@@ -75,8 +89,8 @@ export const RatingMutation = extendType({
                         player: { connect: { id: playerId } },
                         performance: { connect: { id: performanceId }},
                         match: { connect: { id: matchId}},
-                        team: { connect: { id: matchId}},
-                        community: { connect: { id: matchId}},
+                        team: { connect: { id: teamId}},
+                        community: { connect: { id: communityId}},
                     },
                 });
                 return newRating;

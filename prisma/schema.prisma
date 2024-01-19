@@ -29,7 +29,7 @@ model User {
 
 model Player {
   id           Int           @id @default(autoincrement())
-  firstname    String?
+  firstname    String
   lastname     String
   age          Int?
   team         Team          @relation(fields: [teamId], references: [id], name: "PlayerTeam")
@@ -50,7 +50,7 @@ model Rating {
   userId        Int
   player        Player      @relation(fields: [playerId], references: [id], name: "PlayerRated")
   playerId      Int
-  performance   Performance @relation(fields: [performanceId], references: [id], name: "RatingPerformance")
+  performance   Performance @relation(fields: [performanceId], references: [id], name: "PerformanceRatings")
   performanceId Int
   match         Match       @relation(fields: [matchId], references: [id], name: "RatingMatch")
   matchId       Int
@@ -70,7 +70,7 @@ model Performance {
   playerId Int
   match    Match?    @relation(fields: [matchId], references: [id], name: "PerformanceMatch")
   matchId  Int?
-  ratings  Rating[] @relation(name: "RatingPerformance")
+  ratings  Rating[] @relation(name: "PerformanceRatings")
 
   @@unique([playerId, matchId])
 }
@@ -88,8 +88,10 @@ model Match {
   competition   Competition   @relation(fields: [competitionId], references: [id], name: "MatchCompetition")
   competitionId Int
   ratedBy    User[]        @relation(name: "MatchesRated")
+  location Location  @relation(fields: [locationId], references: [id], name: "MatchLocation")
+  locationId Int
 
-  @@unique([date, hometeamId, awayteamId])
+  @@unique([date, hometeamId, awayteamId, competitionId])
 }
 
 model Competition {
@@ -98,6 +100,7 @@ model Competition {
   location   Location @relation(fields: [locationId], references: [id], name: "CompetitionLocation")
   locationId Int
   matches    Match[]  @relation(name: "MatchCompetition")
+  teams Team[] @relation(name: "TeamCompetitions")
 
   @@unique([name, locationId])
 }
@@ -112,6 +115,9 @@ model Community {
   members     User[]   @relation(name: "Communities")
   teams       Team[]   @relation(name: "CommunityTeams")
   ratings Rating[] @relation(name: "CommunityRatings")
+
+@@unique([name, createdById])
+
 }
 
 model Team {
@@ -123,7 +129,8 @@ model Team {
   homegames   Match[]     @relation(name: "HomeTeam")
   awaygames   Match[]     @relation(name: "AwayTeam")
   communities Community[] @relation(name: "CommunityTeams")
-    ratings Rating[] @relation(name: "TeamRatings")
+  ratings Rating[] @relation(name: "TeamRatings")
+  competitions Competition[] @relation(name: "TeamCompetitions")
 
   @@unique([locationId, name])
 }
@@ -136,6 +143,7 @@ model Location {
   users        User[]        @relation(name: "UserLocation")
   players      Player[]      @relation(name: "PlayerCountry")
   competitions Competition[] @relation(name: "CompetitionLocation")
+  matches Match[] @relation(name: "MatchLocation")
 
   @@unique([city, country])
 }

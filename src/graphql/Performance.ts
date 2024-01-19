@@ -5,14 +5,7 @@ export const Performance = objectType({
     name: "Performance",
     definition(t) {
         t.nonNull.int("id"); 
-        t.field("teams", {
-            type: "Team",
-            resolve(parent, args, context) {
-                return context.prisma.location
-                    .findUnique({where: {id: parent.id}})
-                    .teams();
-            }
-        });
+        t.nonNull.dateTime("date");
         t.field("player", {
             type: "Player",
             resolve(parent, args, context) {
@@ -20,13 +13,12 @@ export const Performance = objectType({
                     .findUnique({where: {id: parent.id}})
                     .player();
             }
-        });
+        })
         t.nonNull.list.nonNull.field("ratings", {
             type: "Rating",
             resolve(parent, args, context) {
-                return context.prisma.performance
-                    .findUnique({where: {id: parent.id}})
-                    .ratings();
+                return context.prisma.rating
+                    .findMany({where: {performanceId: parent.id}})
             }
         })
         t.field("match", {
