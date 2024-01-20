@@ -161,6 +161,7 @@ export interface NexusGenFieldTypes {
   }
   Player: { // field return type
     age: number | null; // Int
+    average: number | null; // Int
     country: NexusGenRootTypes['Location'] | null; // Location
     firstname: string; // String!
     id: number; // Int!
@@ -169,9 +170,11 @@ export interface NexusGenFieldTypes {
     performances: NexusGenRootTypes['Performance'][]; // [Performance!]!
     ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
     team: NexusGenRootTypes['Team'] | null; // Team
+    userAverage: number | null; // Int
   }
   Query: { // field return type
-    ok: boolean; // Boolean!
+    communityAverage: number; // Int!
+    lastUserRating: number; // Int!
   }
   Rating: { // field return type
     community: NexusGenRootTypes['Community'] | null; // Community
@@ -266,6 +269,7 @@ export interface NexusGenFieldTypeNames {
   }
   Player: { // field return type name
     age: 'Int'
+    average: 'Int'
     country: 'Location'
     firstname: 'String'
     id: 'Int'
@@ -274,9 +278,11 @@ export interface NexusGenFieldTypeNames {
     performances: 'Performance'
     ratings: 'Rating'
     team: 'Team'
+    userAverage: 'Int'
   }
   Query: { // field return type name
-    ok: 'Boolean'
+    communityAverage: 'Int'
+    lastUserRating: 'Int'
   }
   Rating: { // field return type name
     community: 'Community'
@@ -341,6 +347,15 @@ export interface NexusGenArgTypes {
       email: string; // String!
       password: string; // String!
       username: string; // String!
+    }
+  }
+  Query: {
+    communityAverage: { // args
+      communityId: number; // Int!
+      playerId: number; // Int!
+    }
+    lastUserRating: { // args
+      playerId: number; // Int!
     }
   }
 }
