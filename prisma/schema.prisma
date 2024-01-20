@@ -39,6 +39,8 @@ model Player {
   ratings      Rating[]      @relation(name: "PlayerRated")
   performances Performance[] @relation(name: "PlayerPerformances")
   matches      Match[]       @relation(name: "PlayerMatches")
+  average  Int @default(0)
+  userAverage Int @default(0)
 
   @@unique([firstname, lastname, countryId, teamId])
 }
@@ -116,7 +118,7 @@ model Community {
   teams       Team[]   @relation(name: "CommunityTeams")
   ratings Rating[] @relation(name: "CommunityRatings")
 
-@@unique([name, createdById])
+  @@unique([name, createdById])
 
 }
 

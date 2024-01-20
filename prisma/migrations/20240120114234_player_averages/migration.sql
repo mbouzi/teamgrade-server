@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Player" ADD COLUMN     "average" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "communityAverage" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "userAverage" INTEGER NOT NULL DEFAULT 0;

@@ -69,6 +69,7 @@ type Performance {
 
 type Player {
   age: Int
+  average: Int
   country: Location
   firstname: String!
   id: Int!
@@ -77,10 +78,12 @@ type Player {
   performances: [Performance!]!
   ratings: [Rating!]!
   team: Team
+  userAverage: Int
 }
 
 type Query {
-  ok: Boolean!
+  communityAverage(communityId: Int!, playerId: Int!): Int!
+  lastUserRating(playerId: Int!): Int!
 }
 
 type Rating {
