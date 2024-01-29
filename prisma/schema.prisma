@@ -41,6 +41,7 @@ model Player {
   matches      Match[]       @relation(name: "PlayerMatches")
   average  Int @default(0)
   userAverage Int @default(0)
+  image String?
 
   @@unique([firstname, lastname, countryId, teamId])
 }
@@ -91,7 +92,9 @@ model Match {
   competitionId Int
   ratedBy    User[]        @relation(name: "MatchesRated")
   location Location  @relation(fields: [locationId], references: [id], name: "MatchLocation")
-  locationId Int
+  locationId Int 
+  stadium Stadium  @relation(fields: [stadiumId], references: [id], name: "MatchStadium")
+  stadiumId Int
 
   @@unique([date, hometeamId, awayteamId, competitionId])
 }
@@ -103,6 +106,7 @@ model Competition {
   locationId Int
   matches    Match[]  @relation(name: "MatchCompetition")
   teams Team[] @relation(name: "TeamCompetitions")
+  logo String?
 
   @@unique([name, locationId])
 }
@@ -117,6 +121,7 @@ model Community {
   members     User[]   @relation(name: "Communities")
   teams       Team[]   @relation(name: "CommunityTeams")
   ratings Rating[] @relation(name: "CommunityRatings")
+  badge String?
 
   @@unique([name, createdById])
 
@@ -133,6 +138,8 @@ model Team {
   communities Community[] @relation(name: "CommunityTeams")
   ratings Rating[] @relation(name: "TeamRatings")
   competitions Competition[] @relation(name: "TeamCompetitions")
+  badge String?
+  stadiums Stadium[] @relation(name: "TeamStadium")
 
   @@unique([locationId, name])
 }
@@ -146,6 +153,19 @@ model Location {
   players      Player[]      @relation(name: "PlayerCountry")
   competitions Competition[] @relation(name: "CompetitionLocation")
   matches Match[] @relation(name: "MatchLocation")
+  stadiums Stadium[] @relation(name: "StadiumLocation")
 
   @@unique([city, country])
+}
+
+model Stadium {
+    id     Int     @id @default(autoincrement())
+    name String
+    teams Team[]  @relation(name: "TeamStadium")
+    matches Match[]   @relation(name: "MatchStadium")
+    location Location  @relation(fields: [locationId], references: [id], name: "StadiumLocation")
+    locationId Int
+
+    @@unique([name, locationId])
+
 }
