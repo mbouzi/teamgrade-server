@@ -341,6 +341,7 @@ export interface NexusGenArgTypes {
       performanceId: number; // Int!
       playerId: number; // Int!
       score: number; // Int!
+      seasonId: number; // Int!
       teamId: number; // Int!
     }
     signup: { // args

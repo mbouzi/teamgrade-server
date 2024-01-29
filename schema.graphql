@@ -55,7 +55,7 @@ type Mutation {
   addNewMember(communityId: Int!, userId: Int!): Community!
   createCommunity(name: String!, teamId: Int!): Community!
   login(email: String!, password: String!): AuthPayload!
-  ratePlayer(communityId: Int!, matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!, teamId: Int!): Rating!
+  ratePlayer(communityId: Int!, matchId: Int!, performanceId: Int!, playerId: Int!, score: Int!, seasonId: Int!, teamId: Int!): Rating!
   signup(email: String!, password: String!, username: String!): AuthPayload!
 }
 
