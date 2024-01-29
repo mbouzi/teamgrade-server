@@ -4,6 +4,8 @@ import { decodeAuthHeader, AuthTokenPayload } from "./utils/auth";
 import { Request } from "express";  
 
 const prisma: PrismaClient = new PrismaClient();
+// const prisma = new PrismaClient().$extends(withAccelerate())
+
 
 export interface Context {
     prisma: PrismaClient;
