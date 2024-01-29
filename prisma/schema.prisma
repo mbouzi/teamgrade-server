@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -17,8 +17,8 @@ model User {
   displayname          String?
   email                String      @unique
   password             String
-  profileImg String?
-  location             Location?    @relation(fields: [locationId], references: [id], name: "UserLocation")
+  profileImg           String?
+  location             Location?   @relation(fields: [locationId], references: [id], name: "UserLocation")
   locationId           Int?
   communities          Community[] @relation(name: "Communities")
   ratings              Rating[]    @relation(name: "UserRating")
@@ -34,21 +34,22 @@ model Player {
   age          Int?
   team         Team          @relation(fields: [teamId], references: [id], name: "PlayerTeam")
   teamId       Int
-  country      Location?      @relation(fields: [countryId], references: [id], name: "PlayerCountry")
+  country      Location?     @relation(fields: [countryId], references: [id], name: "PlayerCountry")
   countryId    Int?
   ratings      Rating[]      @relation(name: "PlayerRated")
   performances Performance[] @relation(name: "PlayerPerformances")
   matches      Match[]       @relation(name: "PlayerMatches")
-  average  Int @default(0)
-  userAverage Int @default(0)
-  image String?
+  average      Int           @default(0)
+  userAverage  Int           @default(0)
+  image        String?
+  seasons      Season[]      @relation(name: "PlayerSeasons")
 
   @@unique([firstname, lastname, countryId, teamId])
 }
 
 model Rating {
   id            Int         @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  createdAt     DateTime    @default(now())
   user          User        @relation(fields: [userId], references: [id], name: "UserRating")
   userId        Int
   player        Player      @relation(fields: [playerId], references: [id], name: "PlayerRated")
@@ -58,10 +59,12 @@ model Rating {
   match         Match       @relation(fields: [matchId], references: [id], name: "RatingMatch")
   matchId       Int
   score         Int         @default(0)
-  team Team @relation(fields: [teamId], references: [id], name: "TeamRatings")
-  teamId Int
-  community Community @relation(fields: [communityId], references: [id], name: "CommunityRatings")
-  communityId Int
+  team          Team        @relation(fields: [teamId], references: [id], name: "TeamRatings")
+  teamId        Int
+  community     Community   @relation(fields: [communityId], references: [id], name: "CommunityRatings")
+  communityId   Int
+  season        Season      @relation(fields: [seasonId], references: [id], name: "RatingSeason")
+  seasonId      Int
 
   @@unique([performanceId, userId, playerId, communityId])
 }
@@ -71,9 +74,11 @@ model Performance {
   date     DateTime
   player   Player   @relation(fields: [playerId], references: [id], name: "PlayerPerformances")
   playerId Int
-  match    Match?    @relation(fields: [matchId], references: [id], name: "PerformanceMatch")
+  match    Match?   @relation(fields: [matchId], references: [id], name: "PerformanceMatch")
   matchId  Int?
   ratings  Rating[] @relation(name: "PerformanceRatings")
+  season   Season   @relation(fields: [seasonId], references: [id], name: "PerformanceSeason")
+  seasonId Int
 
   @@unique([playerId, matchId])
 }
@@ -85,28 +90,31 @@ model Match {
   awayteam      Team          @relation(fields: [awayteamId], references: [id], name: "AwayTeam")
   hometeamId    Int
   awayteamId    Int
-  performances   Performance[] @relation(name: "PerformanceMatch")
+  performances  Performance[] @relation(name: "PerformanceMatch")
   ratings       Rating[]      @relation(name: "RatingMatch")
   players       Player[]      @relation(name: "PlayerMatches")
   competition   Competition   @relation(fields: [competitionId], references: [id], name: "MatchCompetition")
   competitionId Int
-  ratedBy    User[]        @relation(name: "MatchesRated")
-  location Location  @relation(fields: [locationId], references: [id], name: "MatchLocation")
-  locationId Int 
-  stadium Stadium  @relation(fields: [stadiumId], references: [id], name: "MatchStadium")
-  stadiumId Int
+  ratedBy       User[]        @relation(name: "MatchesRated")
+  location      Location?     @relation(fields: [locationId], references: [id], name: "MatchLocation")
+  locationId    Int?
+  stadium       Stadium?      @relation(fields: [stadiumId], references: [id], name: "MatchStadium")
+  stadiumId     Int?
+  season        Season        @relation(fields: [seasonId], references: [id], name: "MatchSeason")
+  seasonId      Int
 
   @@unique([date, hometeamId, awayteamId, competitionId])
 }
 
 model Competition {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   name       String
-  location   Location @relation(fields: [locationId], references: [id], name: "CompetitionLocation")
-  locationId Int
-  matches    Match[]  @relation(name: "MatchCompetition")
-  teams Team[] @relation(name: "TeamCompetitions")
-  logo String?
+  location   Location? @relation(fields: [locationId], references: [id], name: "CompetitionLocation")
+  locationId Int?
+  matches    Match[]   @relation(name: "MatchCompetition")
+  teams      Team[]    @relation(name: "TeamCompetitions")
+  logo       String?
+  seasons    Season[]
 
   @@unique([name, locationId])
 }
@@ -120,26 +128,27 @@ model Community {
   moderators  User[]   @relation(name: "ModeratedCommunities")
   members     User[]   @relation(name: "Communities")
   teams       Team[]   @relation(name: "CommunityTeams")
-  ratings Rating[] @relation(name: "CommunityRatings")
-  badge String?
+  ratings     Rating[] @relation(name: "CommunityRatings")
+  badge       String?
+  seasons     Season[]
 
   @@unique([name, createdById])
-
 }
 
 model Team {
-  id          Int         @id @default(autoincrement())
-  name        String
-  players     Player[]    @relation(name: "PlayerTeam")
-  location    Location    @relation(fields: [locationId], references: [id], name: "TeamLocation")
-  locationId  Int
-  homegames   Match[]     @relation(name: "HomeTeam")
-  awaygames   Match[]     @relation(name: "AwayTeam")
-  communities Community[] @relation(name: "CommunityTeams")
-  ratings Rating[] @relation(name: "TeamRatings")
+  id           Int           @id @default(autoincrement())
+  name         String
+  players      Player[]      @relation(name: "PlayerTeam")
+  location     Location?     @relation(fields: [locationId], references: [id], name: "TeamLocation")
+  locationId   Int?
+  homegames    Match[]       @relation(name: "HomeTeam")
+  awaygames    Match[]       @relation(name: "AwayTeam")
+  communities  Community[]   @relation(name: "CommunityTeams")
+  ratings      Rating[]      @relation(name: "TeamRatings")
   competitions Competition[] @relation(name: "TeamCompetitions")
-  badge String?
-  stadiums Stadium[] @relation(name: "TeamStadium")
+  badgeImg     String?
+  stadiums     Stadium[]     @relation(name: "TeamStadium")
+  seasons      Season[]
 
   @@unique([locationId, name])
 }
@@ -152,20 +161,34 @@ model Location {
   users        User[]        @relation(name: "UserLocation")
   players      Player[]      @relation(name: "PlayerCountry")
   competitions Competition[] @relation(name: "CompetitionLocation")
-  matches Match[] @relation(name: "MatchLocation")
-  stadiums Stadium[] @relation(name: "StadiumLocation")
+  matches      Match[]       @relation(name: "MatchLocation")
+  stadiums     Stadium[]     @relation(name: "StadiumLocation")
 
   @@unique([city, country])
 }
 
 model Stadium {
-    id     Int     @id @default(autoincrement())
-    name String
-    teams Team[]  @relation(name: "TeamStadium")
-    matches Match[]   @relation(name: "MatchStadium")
-    location Location  @relation(fields: [locationId], references: [id], name: "StadiumLocation")
-    locationId Int
+  id         Int      @id @default(autoincrement())
+  name       String
+  teams      Team[]   @relation(name: "TeamStadium")
+  matches    Match[]  @relation(name: "MatchStadium")
+  location   Location @relation(fields: [locationId], references: [id], name: "StadiumLocation")
+  locationId Int
 
-    @@unique([name, locationId])
+  @@unique([name, locationId])
+}
 
+model Season {
+  id           Int           @id @default(autoincrement())
+  startYear    String
+  endYear      String
+  competitions Competition[]
+  teams        Team[]
+  players      Player[]      @relation(name: "PlayerSeasons")
+  ratings      Rating[]      @relation(name: "RatingSeason")
+  performances Performance[] @relation(name: "PerformanceSeason")
+  communities  Community[]
+  matches      Match[]       @relation(name: "MatchSeason")
+
+  @@unique([startYear, endYear])
 }
