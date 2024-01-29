@@ -7,60 +7,53 @@ export const Season = objectType({
         t.nonNull.int("id");
         t.nonNull.string("startYear");
         t.nonNull.string("endYear");
-        t.field("communities", {
+        t.nonNull.list.nonNull.field("communities", {
             type: "Community",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .communities();
+                return context.prisma.community
+                .findMany({where: {seasons: {some: {id: parent.id}}}})
             }
         });
-        t.field("teams", {
+        t.nonNull.list.nonNull.field("teams", {
             type: "Team",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .teams();
+                return context.prisma.team
+                .findMany({where: {seasons: {some: {id: parent.id}}}})
             }
         });
-        t.field("ratings", {
+        t.nonNull.list.nonNull.field("ratings", {
             type: "Rating",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .ratings();
+                return context.prisma.rating
+                .findMany({where: {season: {id: parent.id}}})
             }
         });
-        t.field("players", {
+        t.nonNull.list.nonNull.field("players", {
             type: "Player",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .players();
+                return context.prisma.player
+                .findMany({where: {seasons: {some: {id: parent.id}}}})
             }
         });
-        t.field("performances", {
+        t.nonNull.list.nonNull.field("performances", {
             type: "Performance",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .performances();
+                return context.prisma.performance
+                .findMany({where: {season: {id: parent.id}}})
             }
         });
-        t.field("matches", {
+        t.nonNull.list.nonNull.field("matches", {
             type: "Match",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .matches();
+                return context.prisma.match
+                .findMany({where: {season: {id: parent.id}}})
             }
         });
-        t.field("competitions", {
+        t.nonNull.list.nonNull.field("competitions", {
             type: "Competition",
             resolve(parent, args, context) {
-                return context.prisma.season
-                    .findUnique({where: {id: parent.id}})
-                    .competitions();
+                return context.prisma.competition
+                .findMany({where: {seasons: {some: {id: parent.id}}}})
             }
         });
         

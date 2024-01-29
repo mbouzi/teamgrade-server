@@ -94,8 +94,22 @@ type Rating {
   performance: Performance
   player: Player
   score: Int!
+  season: Season
   team: Team
   user: User
+}
+
+type Season {
+  communities: [Community!]!
+  competitions: [Competition!]!
+  endYear: String!
+  id: Int!
+  matches: [Match!]!
+  performances: [Performance!]!
+  players: [Player!]!
+  ratings: [Rating!]!
+  startYear: String!
+  teams: [Team!]!
 }
 
 type Team {

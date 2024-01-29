@@ -43,8 +43,9 @@ model Player {
   userAverage  Int           @default(0)
   image        String?
   seasons      Season[]      @relation(name: "PlayerSeasons")
+  squadNumber Int
 
-  @@unique([firstname, lastname, countryId, teamId])
+  @@unique([firstname, lastname, countryId, teamId, squadNumber])
 }
 
 model Rating {

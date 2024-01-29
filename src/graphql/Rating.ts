@@ -55,6 +55,15 @@ export const Rating = objectType({
                     .performance();
             }
         })
+        
+        t.field("season", {
+            type: "Season",
+            resolve(parent, args, context) {
+                return context.prisma.rating
+                .findUnique({where: {id: parent.id}})
+                .season();
+            }
+        })
     },
 });
 

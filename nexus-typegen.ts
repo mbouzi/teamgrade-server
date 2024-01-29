@@ -82,6 +82,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     score: number; // Int!
   }
+  Season: { // root type
+    endYear: string; // String!
+    id: number; // Int!
+    startYear: string; // String!
+  }
   Team: { // root type
     id: number; // Int!
     name: string; // String!
@@ -184,8 +189,21 @@ export interface NexusGenFieldTypes {
     performance: NexusGenRootTypes['Performance'] | null; // Performance
     player: NexusGenRootTypes['Player'] | null; // Player
     score: number; // Int!
+    season: NexusGenRootTypes['Season'] | null; // Season
     team: NexusGenRootTypes['Team'] | null; // Team
     user: NexusGenRootTypes['User'] | null; // User
+  }
+  Season: { // field return type
+    communities: NexusGenRootTypes['Community'][]; // [Community!]!
+    competitions: NexusGenRootTypes['Competition'][]; // [Competition!]!
+    endYear: string; // String!
+    id: number; // Int!
+    matches: NexusGenRootTypes['Match'][]; // [Match!]!
+    performances: NexusGenRootTypes['Performance'][]; // [Performance!]!
+    players: NexusGenRootTypes['Player'][]; // [Player!]!
+    ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
+    startYear: string; // String!
+    teams: NexusGenRootTypes['Team'][]; // [Team!]!
   }
   Team: { // field return type
     awaygames: NexusGenRootTypes['Match'][]; // [Match!]!
@@ -292,8 +310,21 @@ export interface NexusGenFieldTypeNames {
     performance: 'Performance'
     player: 'Player'
     score: 'Int'
+    season: 'Season'
     team: 'Team'
     user: 'User'
+  }
+  Season: { // field return type name
+    communities: 'Community'
+    competitions: 'Competition'
+    endYear: 'String'
+    id: 'Int'
+    matches: 'Match'
+    performances: 'Performance'
+    players: 'Player'
+    ratings: 'Rating'
+    startYear: 'String'
+    teams: 'Team'
   }
   Team: { // field return type name
     awaygames: 'Match'
