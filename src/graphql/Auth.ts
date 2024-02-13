@@ -28,6 +28,9 @@ export const AuthMutation = extendType({
                 const user = await context.prisma.user.findUnique({
                     where: { email: args.email },
                 });
+
+                console.log("USER:", user)
+
                 
                 if (!user) {
                     throw new Error("No such user found");
@@ -37,12 +40,14 @@ export const AuthMutation = extendType({
                     args.password,
                     user.password,
                 );
+
+                console.log("VAL:", valid)
                 if (!valid) {
                     throw new Error("Invalid password");
                 }
 
                 const token = jwt.sign({ userId: user.id }, APP_SECRET);
-
+                console.log("TOKEN:", token)
                 return {
                     token,
                     user,

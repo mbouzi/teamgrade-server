@@ -1,5 +1,8 @@
-import { extendType, objectType, nonNull, stringArg, intArg, idArg } from "nexus";
+import { extendType, objectType, nonNull, stringArg, intArg, inputObjectType, arg, list } from "nexus";
 import { NexusGenObjects } from "../../nexus-typegen"; 
+
+import { Sort } from './common'
+
 
 export const Player = objectType({
     name: "Player",
@@ -74,6 +77,23 @@ export const Player = objectType({
     },
 });
 
+export const PlayerOrderByInput = inputObjectType({
+    name: "PlayerOrderByInput",
+    definition(t) {
+        t.field("name", { type: Sort });
+        t.field("createdAt", { type: Sort });
+    },
+});
+
+export const Players = objectType({
+    name: "Players",
+    definition(t) {
+        t.nonNull.list.nonNull.field("players", { type: Player });
+        t.nonNull.int("count");
+        t.id("id");
+    },
+});
+
 export const PlayerQuery = extendType({
     type: "Query",    
     definition(t) {
@@ -123,5 +143,48 @@ export const PlayerQuery = extendType({
               
             },
         });
+
+        t.nonNull.field("players", {
+            type: "Players",
+            args: {
+                filter: stringArg() || null,
+                skip: intArg(),
+                take: intArg(),
+                orderBy: arg({ type: list(nonNull(PlayerOrderByInput)) }),
+            },
+            async resolve(parent, args, context) {
+                const where = args.filter
+                    ? {
+                          OR: [
+                              { name: {
+                                  contains: args.filter ? args.filter : "",
+                                  mode: 'insensitive' } },
+                              
+                          ],
+                      }
+                    : {};
+            
+  
+                const players = await context.prisma.player.findMany({
+                      where:  { lastname: {
+                          contains: args.filter ? args.filter : "",
+                          mode: 'insensitive' } },
+                      skip: args?.skip,
+                      take: args?.take,
+                      orderBy: args?.orderBy
+                  });
+  
+                  const count = await context.prisma.player.count({ where:  { lastname: {
+                      contains: args.filter ? args.filter : "",
+                      mode: 'insensitive' } } });
+                  const id = `player-search-results:${JSON.stringify(args)}`;
+  
+                  return {
+                      players,
+                      count,
+                      id,
+                  };
+              },
+          });
     }
 })

@@ -81,9 +81,21 @@ type Player {
   userAverage: Int
 }
 
+input PlayerOrderByInput {
+  createdAt: Sort
+  name: Sort
+}
+
+type Players {
+  count: Int!
+  id: ID
+  players: [Player!]!
+}
+
 type Query {
   communityAverage(communityId: Int!, playerId: Int!): Int!
   lastUserRating(playerId: Int!): Int!
+  players(filter: String, orderBy: [PlayerOrderByInput!], skip: Int, take: Int): Players!
 }
 
 type Rating {
@@ -110,6 +122,11 @@ type Season {
   ratings: [Rating!]!
   startYear: String!
   teams: [Team!]!
+}
+
+enum Sort {
+  asc
+  desc
 }
 
 type Team {

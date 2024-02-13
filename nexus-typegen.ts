@@ -29,9 +29,14 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  PlayerOrderByInput: { // input type
+    createdAt?: NexusGenEnums['Sort'] | null; // Sort
+    name?: NexusGenEnums['Sort'] | null; // Sort
+  }
 }
 
 export interface NexusGenEnums {
+  Sort: "asc" | "desc"
 }
 
 export interface NexusGenScalars {
@@ -76,6 +81,11 @@ export interface NexusGenObjects {
     id: number; // Int!
     lastname: string; // String!
   }
+  Players: { // root type
+    count: number; // Int!
+    id?: string | null; // ID
+    players: NexusGenRootTypes['Player'][]; // [Player!]!
+  }
   Query: {};
   Rating: { // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -108,7 +118,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   AuthPayload: { // field return type
@@ -177,9 +187,15 @@ export interface NexusGenFieldTypes {
     team: NexusGenRootTypes['Team'] | null; // Team
     userAverage: number | null; // Int
   }
+  Players: { // field return type
+    count: number; // Int!
+    id: string | null; // ID
+    players: NexusGenRootTypes['Player'][]; // [Player!]!
+  }
   Query: { // field return type
     communityAverage: number; // Int!
     lastUserRating: number; // Int!
+    players: NexusGenRootTypes['Players']; // Players!
   }
   Rating: { // field return type
     community: NexusGenRootTypes['Community'] | null; // Community
@@ -298,9 +314,15 @@ export interface NexusGenFieldTypeNames {
     team: 'Team'
     userAverage: 'Int'
   }
+  Players: { // field return type name
+    count: 'Int'
+    id: 'ID'
+    players: 'Player'
+  }
   Query: { // field return type name
     communityAverage: 'Int'
     lastUserRating: 'Int'
+    players: 'Players'
   }
   Rating: { // field return type name
     community: 'Community'
@@ -389,6 +411,12 @@ export interface NexusGenArgTypes {
     lastUserRating: { // args
       playerId: number; // Int!
     }
+    players: { // args
+      filter?: string | null; // String
+      orderBy?: NexusGenInputs['PlayerOrderByInput'][] | null; // [PlayerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
   }
 }
 
@@ -400,9 +428,9 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 
