@@ -80,7 +80,7 @@ export const Player = objectType({
 export const PlayerOrderByInput = inputObjectType({
     name: "PlayerOrderByInput",
     definition(t) {
-        t.field("name", { type: Sort });
+        t.field("lastname", { type: Sort });
         t.field("createdAt", { type: Sort });
     },
 });
@@ -169,9 +169,9 @@ export const PlayerQuery = extendType({
                       where:  { lastname: {
                           contains: args.filter ? args.filter : "",
                           mode: 'insensitive' } },
-                      skip: args?.skip,
-                      take: args?.take,
-                      orderBy: args?.orderBy
+                      skip: args?.skip || undefined,
+                      take: args?.take || undefined,
+                    //   orderBy: args?.orderBy
                   });
   
                   const count = await context.prisma.player.count({ where:  { lastname: {

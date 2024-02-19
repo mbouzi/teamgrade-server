@@ -83,7 +83,7 @@ type Player {
 
 input PlayerOrderByInput {
   createdAt: Sort
-  name: Sort
+  lastname: Sort
 }
 
 type Players {
@@ -96,6 +96,7 @@ type Query {
   communityAverage(communityId: Int!, playerId: Int!): Int!
   lastUserRating(playerId: Int!): Int!
   players(filter: String, orderBy: [PlayerOrderByInput!], skip: Int, take: Int): Players!
+  teams(filter: String, orderBy: [TeamOrderByInput!], skip: Int, take: Int): Teams!
 }
 
 type Rating {
@@ -139,6 +140,17 @@ type Team {
   name: String!
   players: [Player!]!
   ratings: [Rating!]!
+}
+
+input TeamOrderByInput {
+  createdAt: Sort
+  name: Sort
+}
+
+type Teams {
+  count: Int!
+  id: ID
+  teams: [Team!]!
 }
 
 type User {

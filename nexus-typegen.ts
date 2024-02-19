@@ -31,6 +31,10 @@ declare global {
 export interface NexusGenInputs {
   PlayerOrderByInput: { // input type
     createdAt?: NexusGenEnums['Sort'] | null; // Sort
+    lastname?: NexusGenEnums['Sort'] | null; // Sort
+  }
+  TeamOrderByInput: { // input type
+    createdAt?: NexusGenEnums['Sort'] | null; // Sort
     name?: NexusGenEnums['Sort'] | null; // Sort
   }
 }
@@ -100,6 +104,11 @@ export interface NexusGenObjects {
   Team: { // root type
     id: number; // Int!
     name: string; // String!
+  }
+  Teams: { // root type
+    count: number; // Int!
+    id?: string | null; // ID
+    teams: NexusGenRootTypes['Team'][]; // [Team!]!
   }
   User: { // root type
     displayname?: string | null; // String
@@ -196,6 +205,7 @@ export interface NexusGenFieldTypes {
     communityAverage: number; // Int!
     lastUserRating: number; // Int!
     players: NexusGenRootTypes['Players']; // Players!
+    teams: NexusGenRootTypes['Teams']; // Teams!
   }
   Rating: { // field return type
     community: NexusGenRootTypes['Community'] | null; // Community
@@ -231,6 +241,11 @@ export interface NexusGenFieldTypes {
     name: string; // String!
     players: NexusGenRootTypes['Player'][]; // [Player!]!
     ratings: NexusGenRootTypes['Rating'][]; // [Rating!]!
+  }
+  Teams: { // field return type
+    count: number; // Int!
+    id: string | null; // ID
+    teams: NexusGenRootTypes['Team'][]; // [Team!]!
   }
   User: { // field return type
     communities: NexusGenRootTypes['Community'] | null; // Community
@@ -323,6 +338,7 @@ export interface NexusGenFieldTypeNames {
     communityAverage: 'Int'
     lastUserRating: 'Int'
     players: 'Players'
+    teams: 'Teams'
   }
   Rating: { // field return type name
     community: 'Community'
@@ -358,6 +374,11 @@ export interface NexusGenFieldTypeNames {
     name: 'String'
     players: 'Player'
     ratings: 'Rating'
+  }
+  Teams: { // field return type name
+    count: 'Int'
+    id: 'ID'
+    teams: 'Team'
   }
   User: { // field return type name
     communities: 'Community'
@@ -414,6 +435,12 @@ export interface NexusGenArgTypes {
     players: { // args
       filter?: string | null; // String
       orderBy?: NexusGenInputs['PlayerOrderByInput'][] | null; // [PlayerOrderByInput!]
+      skip?: number | null; // Int
+      take?: number | null; // Int
+    }
+    teams: { // args
+      filter?: string | null; // String
+      orderBy?: NexusGenInputs['TeamOrderByInput'][] | null; // [TeamOrderByInput!]
       skip?: number | null; // Int
       take?: number | null; // Int
     }

@@ -1,5 +1,8 @@
-import { extendType, objectType, nonNull, stringArg, intArg } from "nexus";
+import { extendType, objectType, nonNull, stringArg, intArg, inputObjectType, arg, list } from "nexus";
 import { NexusGenObjects } from "../../nexus-typegen"; 
+
+import { Sort } from './common'
+
 
 export const Team = objectType({
     name: "Team",
@@ -95,3 +98,69 @@ export const Team = objectType({
         // });
     },
 });
+
+export const TeamOrderByInput = inputObjectType({
+    name: "TeamOrderByInput",
+    definition(t) {
+        t.field("name", { type: Sort });
+        t.field("createdAt", { type: Sort });
+    },
+});
+
+export const Teams = objectType({
+    name: "Teams",
+    definition(t) {
+        t.nonNull.list.nonNull.field("teams", { type: Team });
+        t.nonNull.int("count");
+        t.id("id");
+    },
+});
+
+export const TeamQuery = extendType({
+    type: "Query",    
+    definition(t) {
+
+        t.nonNull.field("teams", {
+            type: "Teams",
+            args: {
+                filter: stringArg() || null,
+                skip: intArg(),
+                take: intArg(),
+                orderBy: arg({ type: list(nonNull(TeamOrderByInput)) }),
+            },
+            async resolve(parent, args, context) {
+                const where = args.filter
+                    ? {
+                          OR: [
+                              { name: {
+                                  contains: args.filter ? args.filter : "",
+                                  mode: 'insensitive' } },
+                              
+                          ],
+                      }
+                    : {};
+            
+  
+                const teams = await context.prisma.team.findMany({
+                      where:  { name: {
+                          contains: args.filter ? args.filter : "",
+                          mode: 'insensitive' } },
+                      skip: args?.skip || undefined,
+                      take: args?.take || undefined,
+                    //   orderBy: args?.orderBy || "desc"
+                  });
+  
+                  const count = await context.prisma.team.count({ where:  { name: {
+                      contains: args.filter ? args.filter : "",
+                      mode: 'insensitive' } } });
+                  const id = `team-search-results:${JSON.stringify(args)}`;
+  
+                  return {
+                      teams,
+                      count,
+                      id,
+                  };
+              },
+          });
+    }
+})
