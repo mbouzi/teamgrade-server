@@ -102,6 +102,7 @@ export interface NexusGenObjects {
     startYear: string; // String!
   }
   Team: { // root type
+    badgeImg?: string | null; // String
     id: number; // Int!
     name: string; // String!
   }
@@ -233,6 +234,7 @@ export interface NexusGenFieldTypes {
   }
   Team: { // field return type
     awaygames: NexusGenRootTypes['Match'][]; // [Match!]!
+    badgeImg: string | null; // String
     communities: NexusGenRootTypes['Community'][]; // [Community!]!
     competitions: NexusGenRootTypes['Competition'][]; // [Competition!]!
     homegames: NexusGenRootTypes['Match'][]; // [Match!]!
@@ -366,6 +368,7 @@ export interface NexusGenFieldTypeNames {
   }
   Team: { // field return type name
     awaygames: 'Match'
+    badgeImg: 'String'
     communities: 'Community'
     competitions: 'Competition'
     homegames: 'Match'

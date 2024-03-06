@@ -132,6 +132,7 @@ enum Sort {
 
 type Team {
   awaygames: [Match!]!
+  badgeImg: String
   communities: [Community!]!
   competitions: [Competition!]!
   homegames: [Match!]!

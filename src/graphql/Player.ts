@@ -147,7 +147,7 @@ export const PlayerQuery = extendType({
         t.nonNull.field("players", {
             type: "Players",
             args: {
-                filter: stringArg() || null,
+                filter: stringArg(),
                 skip: intArg(),
                 take: intArg(),
                 orderBy: arg({ type: list(nonNull(PlayerOrderByInput)) }),

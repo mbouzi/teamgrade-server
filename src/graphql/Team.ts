@@ -9,6 +9,7 @@ export const Team = objectType({
     definition(t) {
         t.nonNull.int("id"); 
         t.nonNull.string("name"); 
+        t.string("badgeImg"); 
         t.nonNull.list.nonNull.field("players", {
             type: "Player",
             resolve(parent, args, context) {
@@ -123,7 +124,7 @@ export const TeamQuery = extendType({
         t.nonNull.field("teams", {
             type: "Teams",
             args: {
-                filter: stringArg() || null,
+                filter: stringArg(),
                 skip: intArg(),
                 take: intArg(),
                 orderBy: arg({ type: list(nonNull(TeamOrderByInput)) }),
